@@ -557,11 +557,6 @@ public class CalDavLoaderImpl extends AbstractActiveService implements ManagedSe
 
                                         break;
                                 }
-                                /*
-                                 * if (!calDavEvent.getCategoryList().containsAll(query.getFilterCategory())) {
-                                 * continue;
-                                 * }
-                                 */
                                 if (!eventCategoriesMatchFilterCategories) {
                                     continue;
                                 }
