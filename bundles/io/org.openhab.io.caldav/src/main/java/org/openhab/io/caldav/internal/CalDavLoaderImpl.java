@@ -563,7 +563,48 @@ public class CalDavLoaderImpl extends AbstractActiveService implements ManagedSe
                                 log.trace("not found event category for event {}", calDavEvent.getId());
                                 continue;
                             } else {
-                                if (!calDavEvent.getCategoryList().containsAll(query.getFilterCategory())) {
+                                log.trace("processing event category");
+                                boolean eventCategoriesMatchFilterCategories = false;
+                                switch (Boolean.toString(query.getFilterCategoryMatchesAny())) {
+                                    case "false":
+                                        log.trace("filter-category encountered");
+                                        eventCategoriesMatchFilterCategories = calDavEvent.getCategoryList()
+                                                .containsAll(query.getFilterCategory());
+                                        break;
+
+                                    case "true":
+                                        log.trace("filter-category-any encountered");
+                                        int filterCategoriesIndex = 0;
+                                        List<String> filterCategories = query.getFilterCategory();
+                                        List<String> eventCategories = calDavEvent.getCategoryList();
+                                        log.trace("comparing filter '{}' to event categories '{}' from event {}",
+                                                filterCategories, eventCategories, calDavEvent.getId());
+                                        // browse filter categories, which are not null
+                                        while (eventCategoriesMatchFilterCategories == false
+                                                && filterCategoriesIndex < filterCategories.size()) {
+                                            int eventCategoriesIndex = 0;
+                                            // browse event categories, which can be null
+                                            while (eventCategoriesMatchFilterCategories == false
+                                                    && eventCategoriesIndex < eventCategories.size()) {
+                                                if (eventCategories.get(eventCategoriesIndex).equalsIgnoreCase(
+                                                        filterCategories.get(filterCategoriesIndex))) {
+                                                    log.debug("filter category {} matches event category {}",
+                                                            filterCategories.get(filterCategoriesIndex),
+                                                            eventCategories.get(eventCategoriesIndex));
+                                                    eventCategoriesMatchFilterCategories = true;
+                                                }
+                                                eventCategoriesIndex++;
+                                            }
+
+                                            filterCategoriesIndex++;
+                                        }
+                                        break;
+
+                                    default:
+
+                                        break;
+                                }
+                                if (!eventCategoriesMatchFilterCategories) {
                                     continue;
                                 }
                             }
