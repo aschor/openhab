@@ -511,26 +511,26 @@ public class CalDavLoaderImpl extends AbstractActiveService implements ManagedSe
                             }
                         }
                         if (query.getFilterCategory() != null) {
-                            log.debug("processing filter category");
+                            log.trace("processing filter category");
                             if (calDavEvent.getCategoryList() == null) {
-                                log.debug("not found event category for event {}", calDavEvent.getId());
+                                log.trace("not found event category for event {}", calDavEvent.getId());
                                 continue;
                             } else {
-                                log.debug("processing event category");
+                                log.trace("processing event category");
                                 boolean eventCategoriesMatchFilterCategories = false;
                                 switch (Boolean.toString(query.getFilterCategoryMatchesAny())) {
                                     case "false":
-                                        log.debug("filter-category encountered");
+                                        log.trace("filter-category encountered");
                                         eventCategoriesMatchFilterCategories = calDavEvent.getCategoryList()
                                                 .containsAll(query.getFilterCategory());
                                         break;
 
                                     case "true":
-                                        log.debug("filter-category-any encountered");
+                                        log.trace("filter-category-any encountered");
                                         int filterCategoriesIndex = 0;
                                         List<String> filterCategories = query.getFilterCategory();
                                         List<String> eventCategories = calDavEvent.getCategoryList();
-                                        log.debug("comparing filter '{}' to event categories '{}' from event {}",
+                                        log.trace("comparing filter '{}' to event categories '{}' from event {}",
                                                 filterCategories, eventCategories, calDavEvent.getId());
                                         // browse filter categories, which are not null
                                         while (eventCategoriesMatchFilterCategories == false
@@ -562,7 +562,7 @@ public class CalDavLoaderImpl extends AbstractActiveService implements ManagedSe
                                 }
                             }
                         } else {
-                            log.debug("not found any filter category");
+                            log.trace("not found any filter category");
                         }
                         eventList.add(calDavEvent);
                     }
